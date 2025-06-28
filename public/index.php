@@ -1,9 +1,10 @@
 <?php
 
+    $path = "/index";
+
     if(isset($_SERVER['PATH_INFO']))
     {
-        echo $_SERVER['PATH_INFO'];
-    }else 
-    {
-        echo "TIDAK ADA PATH_INFO";
+        $path = $_SERVER['PATH_INFO'];
     }
+
+    require __DIR__ . '/../app/View' . $path . '.php';
