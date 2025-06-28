@@ -1,0 +1,12 @@
+{
+    "name": "programmer-zaman-now/belajar-php-mvc",
+    "description": "Belajar PHP MVC",
+    "type": "project",
+    "authors": [
+        {
+            "name": "mrosyidi",
+            "email": "rosyidiyuekunchen@gmail.com"
+        }
+    ],
+    "require": {}
+}
