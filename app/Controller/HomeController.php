@@ -11,7 +11,7 @@
                 'content' => 'Selamat belajar PHP MVC di Channel Programmer Zaman Now'
             ];
 
-            echo "HomeController.index()";
+            require __DIR__ . '/../View/Home/index.php';
         }
 
         function hello(): void 
