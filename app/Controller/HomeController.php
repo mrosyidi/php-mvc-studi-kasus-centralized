@@ -2,6 +2,8 @@
 
     namespace ProgrammerZamanNow\Belajar\PHP\MVC\Controller;
 
+    use ProgrammerZamanNow\Belajar\PHP\MVC\App\View;
+
     class HomeController
     {
         function index(): void 
@@ -11,7 +13,7 @@
                 'content' => 'Selamat belajar PHP MVC di Channel Programmer Zaman Now'
             ];
 
-            require __DIR__ . '/../View/Home/index.php';
+            View::render('Home/index', $model);
         }
 
         function hello(): void 
