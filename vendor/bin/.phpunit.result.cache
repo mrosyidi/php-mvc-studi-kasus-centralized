@@ -1,1 +1,1 @@
-{"version":1,"defects":{"RegexTest::testRegex":7},"times":{"RegexTest::testRegex":0.031}}
+{"version":1,"defects":{"RegexTest::testRegex":7,"ProgrammerZamanNow\\Belajar\\PHP\\MVC\\Config\\DatabaseTest::testGetConnection":8},"times":{"RegexTest::testRegex":0,"ProgrammerZamanNow\\Belajar\\PHP\\MVC\\Config\\DatabaseTest::testGetConnection":0.003,"ProgrammerZamanNow\\Belajar\\PHP\\MVC\\Config\\DatabaseTest::testGetConnectionSingleton":0.001}}
