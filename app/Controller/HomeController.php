@@ -18,4 +18,9 @@
         {
             echo "HemeController.world()";
         }
+
+        function about(): void 
+        {
+            echo "Author, Eko Kurniawan Khannedy";
+        }
     }
