@@ -6,6 +6,11 @@
     {
         function index(): void 
         {
+            $model = [
+                'title' => 'Belajar PHP MVC',
+                'content' => 'Selamat belajar PHP MVC di Channel Programmer Zaman Now'
+            ];
+
             echo "HomeController.index()";
         }
 
@@ -22,5 +27,17 @@
         function about(): void 
         {
             echo "Author, Eko Kurniawan Khannedy";
+        }
+
+        function login(): void 
+        {
+            $request = [
+                'username' => $_POST['username'],
+                'password' => $_POST['password']
+            ];
+
+            $response = [
+                'message' => 'Login sukses'
+            ];
         }
     }
