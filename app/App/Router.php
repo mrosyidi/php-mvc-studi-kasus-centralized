@@ -26,7 +26,7 @@
             
             foreach(self::$routes as $route)
             {
-                if($path == $route['path'] && $method == $route['emthod'])
+                if($path == $route['path'] && $method == $route['method'])
                 {
                     echo "CONTROLLER : " . $route['controller'] . ", FUNCTION : " . $route['function'];
                     return;
