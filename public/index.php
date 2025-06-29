@@ -8,4 +8,5 @@
     Router::add('GET', '/', HomeController::class, 'index');
     Router::add('GET', '/hello', HomeController::class, 'login');
     Router::add('GET', '/world', HomeController::class, 'register');
+    Router::add('GET', '/about', HomeController::class, 'about');
     Router::run();
