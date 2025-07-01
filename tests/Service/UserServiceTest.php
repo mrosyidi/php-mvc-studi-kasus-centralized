@@ -8,6 +8,7 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\UserRepository;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Service\UserService;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterRequest;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
     class UserServiceTest extends TestCase 
@@ -61,5 +62,44 @@
             $request->name = "Eko";
             $request->password = "rahasia";
             $this->userService->register($request);
+        }
+
+        public function testLoginNotFound()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserLoginRequest();
+            $request->id = "eko";
+            $request->password = "eko";
+            $this->userService->login($request);
+        }
+
+        public function testLoginWrongPassword()
+        {
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = password_hash("eko", PASSWORD_BCRYPT);
+            $this->expectException(ValidationException::class);
+            
+            $request = new UserLoginRequest();
+            $request->id = "eko";
+            $request->password = "salah";
+            $this->userService->login($request);
+        }
+
+        public function testLoginSuccess()
+        {
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = password_hash("eko", PASSWORD_BCRYPT);
+            $this->expectException(ValidationException::class);
+            
+            $request = new UserLoginRequest();
+            $request->id = "eko";
+            $request->password = "eko";
+            $response = $this->userService->login($request);
+            self::assertEquals($request->id, $response->user->id);
+            self::assertTrue(password_verify($request->password, $response->user->password));
         }
     }
