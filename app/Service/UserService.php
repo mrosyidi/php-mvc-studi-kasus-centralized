@@ -29,7 +29,7 @@
 
                 if($user != null)
                 {
-                    throw new ValidationException("user Id already exists");
+                    throw new ValidationException("User Id already exists");
                 }
 
                 $user = new User();
