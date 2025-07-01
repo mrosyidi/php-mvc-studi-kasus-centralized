@@ -8,7 +8,7 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\UserRepository;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Service\UserService;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterRequest;
-    use ProgrammerZamanNow\Belajar\PHP\Exception\ValidationException;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
     class UserServiceTest extends TestCase 
     {
@@ -35,5 +35,31 @@
             self::assertEquals($request->id, $response->user->id);
             self::assertEquals($request->name, $response->user->name);
             self::assertTrue(password_verify($request->password, $response->user->password));
+        }
+
+        public function testRegisterFailde()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserRegisterRequest();
+            $request->id = "";
+            $request->name = "";
+            $request->password = "";
+            $this->userService->register($request);
+        }
+
+        public function testRegisterDuplicate()
+        {
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = "rahasia";
+            $this->userRepository->save($user);
+            
+            $this->expectException(ValidationException::class);
+            $request = new UserRegisterRequest();
+            $request->id = "eko";
+            $request->name = "Eko";
+            $request->password = "rahasia";
+            $this->userService->register($request);
         }
     }

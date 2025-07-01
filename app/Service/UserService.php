@@ -42,6 +42,7 @@
                 $response = new UserRegisterResponse();
                 $response->user = $user;
 
+                Database::commitTransaction();
                 return $response;
             }catch(\Exception $exception)
             {
