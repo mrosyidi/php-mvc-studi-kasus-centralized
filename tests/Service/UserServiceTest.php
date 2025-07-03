@@ -6,21 +6,27 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Config\Database;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Domain\User;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\UserRepository;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\SessionRepository;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Service\UserService;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterRequest;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
     class UserServiceTest extends TestCase 
     {
         private UserService $userService;
         private UserRepository $userRepository;
+        private SessionRepository $sessionRepository;
 
         protected function setUp(): void 
         {
             $connection = Database::getConnection();
             $this->userRepository = new UserRepository($connection);
+            $this->sessionRepository = new SessionRepository(Database::getConnection());
             $this->userService = new UserService($this->userRepository);
+            $this->sessionRepository->deleteAll();
             $this->userRepository->deleteAll();
         }
 

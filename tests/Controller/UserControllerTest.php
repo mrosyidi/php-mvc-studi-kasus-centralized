@@ -20,9 +20,11 @@
         use PHPUnit\Framework\TestCase;
         use ProgrammerZamanNow\Belajar\PHP\MVC\Config\Database;
         use ProgrammerZamanNow\Belajar\PHP\MVC\Domain\User;
+        use ProgrammerZamanNow\Belajar\PHP\MVC\Domain\Session;
         use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\UserRepository;
         use ProgrammerZamanNow\Belajar\PHP\MVC\Controller\UserController;
         use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\SessionRepository;
+        use ProgrammerZamanNow\Belajar\PHP\MVC\Service\SessionService;
 
         class UserControllerTest extends TestCase
         {
@@ -182,6 +184,27 @@
                 $this->assertStringContainsString('Id', $output);
                 $this->assertStringContainsString('Password', $output);
                 $this->assertStringContainsString('Id or password is wrong', $output);
+            }
+
+            public function testLogout()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+
+                ob_start();
+                $this->userController->logout();
+                $output = ob_get_clean();
+                
+                $this->assertStringContainsString('Location: /',$output);
+                $this->assertStringContainsString('X-PZN-SESSION : ', $output);
             }
         } 
     }
