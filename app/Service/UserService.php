@@ -8,6 +8,8 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginResponse;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserProfileUpdateRequest;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserProfileUpdateResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\UserRepository;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
@@ -88,6 +90,43 @@
             if($request->id == null || $request->password == null || trim($request->id == "") || trim($request->password == ""))
             {
                 throw new ValidationException("Id, Password can not blank");
+            }
+        }
+
+        public function updateProfile(UserProfileUpdateRequest $request): UserProfileUpdateResponse
+        {
+            $this->validateUserProfileUpdateRequest($request);
+
+            try
+            {
+                Database::beginTransaction();
+                $user = $this->userRepository->findById($request->id);
+
+                if($user == null)
+                {
+                    throw new ValidationException("User is not found");
+                }
+
+                $user->name = $request->name;
+                $this->userRepository->update($user);
+
+                Database::commitTransaction();
+                $response = new UserProfileUpdateResponse();
+                $response->user = $user;
+
+                return $response;
+            }catch(\Exception $exception)
+            {
+                Database::rollbackTransaction();
+                throw $exception;
+            }
+        }
+
+        private function validateUserProfileUpdateRequest(UserProfileUpdateRequest $request)
+        {
+            if($request->id == null || $request->name == null || trim($request->id == "") || trim($request->name == ""))
+            {
+                throw new ValidationException("Id, Name can not blank");
             }
         }
     }
