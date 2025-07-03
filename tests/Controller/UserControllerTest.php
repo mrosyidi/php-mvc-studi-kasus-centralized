@@ -206,5 +206,77 @@
                 $this->assertStringContainsString('Location: /',$output);
                 $this->assertStringContainsString('X-PZN-SESSION : ', $output);
             }
+
+            public function testUpdateProfile()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+
+                ob_start();
+                $this->userController->updateProfile();
+                $output = ob_get_clean();
+
+                $this->assertStringContainsString('Profile', $output);
+                $this->assertStringContainsString('Id', $output);
+                $this->assertStringContainsString('eko', $output);
+                $this->assertStringContainsString('Name', $output);
+                $this->assertStringContainsString('Eko', $output);
+            }
+
+            public function testPostUpdateProfileSuccess()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+                $_POST['name'] = 'Budi';
+
+                ob_start();
+                $this->userController->postUpdateProfile();
+                $output = ob_get_clean();
+
+                $this->assertStringContainsString('Location: /', $output);
+                $result = $this->userRepository->findById("eko");
+                $this->assertEquals("Budi", $result->name);
+            }
+
+            public function testPostUpdateProfileValidationError()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+                $_POST['name'] = '';
+
+                ob_start();
+                $this->userController->postUpdateProfile();
+                $output = ob_get_clean();
+
+                $this->assertStringContainsString('Profile', $output);
+                $this->assertStringContainsString('Id', $output);
+                $this->assertStringContainsString('eko', $output);
+                $this->assertStringContainsString('Name', $output);
+                $this->assertStringContainsString('Id, Name can not blank', $output);
+            }
         } 
     }
