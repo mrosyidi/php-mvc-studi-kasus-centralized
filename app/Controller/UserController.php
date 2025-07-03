@@ -9,16 +9,21 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Repository\SessionRepository;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Service\SessionService;
 
     class UserController 
     {
         private UserService $userService;
+        private SessionService $sessionService;
 
         public function __construct()
         {
             $connection = Database::getConnection();
             $userRepository = new UserRepository($connection);
             $this->userService = new userService($userRepository);
+            $sessionRepository = new SessionRepository($connection);
+            $this->sessionService = new SessionService($sessionRepository, $userRepository);
         }
 
         public function register()
