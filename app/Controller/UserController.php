@@ -68,4 +68,10 @@
                 View::render('User/login', ['title' => 'Login user', 'error' => $exception->getMessage()]);
             }
         }
+
+        public function logout()
+        {
+            $this->sessionService->destroy();
+            View::redirect('/');
+        }
     }
