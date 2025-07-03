@@ -12,6 +12,7 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserRegisterResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginResponse;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserProfileUpdateRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
     class UserServiceTest extends TestCase 
@@ -107,5 +108,38 @@
             $response = $this->userService->login($request);
             self::assertEquals($request->id, $response->user->id);
             self::assertTrue(password_verify($request->password, $response->user->password));
+        }
+
+        public function testUpdateSuccess()
+        {
+            $user = new User();
+            $user->id = 'eko';
+            $user->name = 'Eko';
+            $user->password = password_hash('eko', PASSWORD_BCRYPT);
+            $this->userRepository->save($user);
+            $request = new UserProfileUpdateRequest();
+            $request->id = 'eko';
+            $request->name = 'Budi';
+            $this->userService->updateProfile($request);
+            $result = $this->userRepository->findById($user->id);
+            self::assertEquals($request->name, $result->name);
+        }
+
+        public function testUpdateValidationError()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserProfileUpdateRequest();
+            $request->id = "";
+            $request->name = "";
+            $this->userService->updateProfile($request);
+        }
+
+        public function testUpdateNotFound()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserProfileUpdateRequest();
+            $request->id = "eko";
+            $request->name = "Budi";
+            $this->userService->updateProfile($request);
         }
     }
