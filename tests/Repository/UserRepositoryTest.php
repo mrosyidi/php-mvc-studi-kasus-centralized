@@ -35,4 +35,19 @@
             $user = $this->userRepository->findByID("notfound");
             self::assertNull($user);
         }
+
+         public function testUpdate()
+        {
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = "rahasia";
+            $this->userRepository->save($user);
+            $user->name = "Budi";
+            $this->userRepository->update($user);
+            $result = $this->userRepository->findById($user->id);
+            self::assertEquals($user->id, $result->id);
+            self::assertEquals($user->name, $result->name);
+            self::assertEquals($user->password, $result->password);
+        }
     }
