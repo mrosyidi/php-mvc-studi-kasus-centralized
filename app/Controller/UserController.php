@@ -61,7 +61,8 @@
 
             try 
             {
-                $this->userService->login($request);
+                $response = $this->userService->login($request);
+                $this->sessionService->create($response->user->id);
                 View::redirect('/');
             }catch(ValidationException $exception)
             {
