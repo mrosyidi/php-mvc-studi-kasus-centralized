@@ -13,6 +13,7 @@
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserLoginResponse;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserProfileUpdateRequest;
+    use ProgrammerZamanNow\Belajar\PHP\MVC\Model\UserPasswordUpdateRequest;
     use ProgrammerZamanNow\Belajar\PHP\MVC\Exception\ValidationException;
 
     class UserServiceTest extends TestCase 
@@ -141,5 +142,21 @@
             $request->id = "eko";
             $request->name = "Budi";
             $this->userService->updateProfile($request);
+        }
+
+        public function testUpdatePasswordSuccess()
+        {
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = password_hash("eko", PASSWORD_BCRYPT);
+            $this->userRepository->save($user);
+            $request = new UserPasswordUpdateRequest();
+            $request->id = "eko";
+            $request->oldPassword = "eko";
+            $request->newPassword = "new";
+            $this->userService->updatePassword($request);
+            $result = $this->userRepository->findById($user->id);
+            self::assertTrue(password_verify($request->newPassword, $result->password));
         }
     }
