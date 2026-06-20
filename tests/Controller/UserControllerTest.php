@@ -278,5 +278,27 @@
                 $this->assertStringContainsString('Name', $output);
                 $this->assertStringContainsString('Id, Name can not blank', $output);
             }
+
+            public function testUpdatePassword()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+                
+                ob_start();
+                $this->userController->updatePassword();
+                $output = ob_get_clean();
+
+                $this->assertStringContainsString('Password', $output);
+                $this->assertStringContainsString('Id', $output);
+                $this->assertStringContainsString('eko', $output);
+            }
         } 
     }
