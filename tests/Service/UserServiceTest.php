@@ -159,4 +159,14 @@
             $result = $this->userRepository->findById($user->id);
             self::assertTrue(password_verify($request->newPassword, $result->password));
         }
+
+        public function tesUpdatePasswordValidationError()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserPasswordUpdateRequest();
+            $request->id = "id";
+            $request->oldPassword = "";
+            $request->newPassword = "";
+            $this->userService->updatePassword($request);
+        }
     }
