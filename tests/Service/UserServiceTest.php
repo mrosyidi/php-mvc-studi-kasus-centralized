@@ -184,4 +184,14 @@
             $request->newPassword = "new";
             $this->userService->updatePassword($request);
         }
+
+        public function testUpdatePasswordNotFound()
+        {
+            $this->expectException(ValidationException::class);
+            $request = new UserPasswordUpdateRequest();
+            $request->id = "eko";
+            $request->oldPassword = "eko";
+            $request->newPassword = "new";
+            $this->userService->updatePassword($request);
+        }
     }
