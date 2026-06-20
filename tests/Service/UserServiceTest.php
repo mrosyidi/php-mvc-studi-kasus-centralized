@@ -169,4 +169,19 @@
             $request->newPassword = "";
             $this->userService->updatePassword($request);
         }
+
+        public function testUpdatePasswordWrongOldPassword()
+        {
+            $this->expectException(ValidationException::class);
+            $user = new User();
+            $user->id = "eko";
+            $user->name = "Eko";
+            $user->password = password_hash("eko", PASSWORD_BCRYPT);
+            $this->userRepository->save($user);
+            $request = new UserPasswordUpdateRequest();
+            $request->id = "eko";
+            $request->oldPassword = "salah";
+            $request->newPassword = "new";
+            $this->userService->updatePassword($request);
+        }
     }
