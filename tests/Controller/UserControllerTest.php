@@ -348,5 +348,30 @@
                 $this->assertStringContainsString('eko', $output);
                 $this->assertStringContainsString('Id, Old Password, New Password can not blank', $output);
             }
+
+            public function testPostUpdatePasswordWrongOldPassword()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash("rahasia", PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+                $_POST['oldPassword'] = 'salah';
+                $_POST['newPassword'] = 'budi';
+
+                ob_start();
+                $this->userController->postUpdatePassword();
+                $output = ob_get_clean();
+
+                $this->assertStringContainsString('Password', $output);
+                $this->assertStringContainsString('Id', $output);
+                $this->assertStringContainsString('eko', $output);
+                $this->assertStringContainsString('Old password is wrong', $output);
+            }
         } 
     }
