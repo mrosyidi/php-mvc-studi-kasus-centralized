@@ -300,5 +300,29 @@
                 $this->assertStringContainsString('Id', $output);
                 $this->assertStringContainsString('eko', $output);
             }
+
+            public function testPostUpdatePasswordSuccess()
+            {
+                $user = new User();
+                $user->id = "eko";
+                $user->name = "Eko";
+                $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+                $this->userRepository->save($user);
+                $session = new Session();
+                $session->id = uniqid();
+                $session->userId = $user->id;
+                $this->sessionRepository->save($session);
+                $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+                $_POST['oldPassword'] = 'rahasia';
+                $_POST['newPassword'] = 'budi';
+
+                ob_start();
+                $this->userController->postUpdatePassword();
+                $output = ob_get_clean();
+                
+                $this->assertStringContainsString('Location: /', $output);
+                $result = $this->userRepository->findById($user->id);
+                self::assertTrue(password_verify("budi", $result->password));
+            }
         } 
     }
